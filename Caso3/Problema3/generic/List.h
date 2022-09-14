@@ -22,8 +22,8 @@ class List {
             empty = true;
         }
 
-        void add(T *pData) {
-            Node<T> *newNode = new Node<T>(pData);
+        void add(T *pData, int pPriority) {
+            Node<T> *newNode = new Node<T>(pData, pPriority);
 
             if (quantity>0) {
                 this->last->setNext(newNode);
@@ -65,10 +65,10 @@ class List {
         }
 
         // es que si el position es mayor a la cantidad, entonces inserto al final
-        void insert(int pPosition, T *pData) {
+        void insert(int pPosition, T *pData, int pPriority) {
             
             if (pPosition<getSize() && first!=NULL) {
-                Node<T> *newNodo = new Node<T>(pData);
+                Node<T> *newNodo = new Node<T>(pData, pPriority);
 
                 T* result = find(pPosition);
                 
@@ -79,44 +79,52 @@ class List {
                     searchPosition->setPrev(newNodo);
                     
                 } else {
+                    this->first->setPrev(newNodo);
                     this->first = newNodo;
                 }
                 
                 quantity++;
             } else {
-                add(pData);
+                add(pData,0);
             }
         }
 
-        bool remove(int pPosition) {
-            bool result = false;
+        T* remove(int pPosition) {
+            T* result = NULL;
             if (first!=NULL && pPosition<getSize()) {
                 Node<T> *search = first;
                 if (pPosition!=0) {
-                    T* data = find(pPosition);
+                    result = find(pPosition);
 
-                    if (searchPosition!=last) {
-                        searchPosition->getPrev()->setNext(searchPosition->getNext());
-                        searchPosition->getNext()->setPrev(searchPosition->getPrev());
-                        searchPosition->setNext(NULL);
-                    }
-                    else {
+                    searchPosition->getPrev()->setNext(searchPosition->getNext());
+
+                    if (searchPosition==last) {
                         last = searchPosition->getPrev();
-                        last->setNext(NULL);
-                    }              
-                    
-                    searchPosition->setPrev(NULL);
-                    delete searchPosition;
+                    }
+                    searchPosition->setNext(NULL);
                 } else {
                     first = first->getNext();
-                    first->setPrev(NULL);
-                  //  search->setNext(NULL);
-                    delete search;
+                    search->setNext(NULL);
+                    result = search->getData();
                 }
                 quantity--;
+                if (quantity == 0){
+                    this->empty = true;
+                }
             }
             return result;
-        } 
+        }
+        
+        void PrintList(){ // Esta función imprime la lista
+            Node<T> * printPtr = this->first;
+            cout << "Cantidad: " << quantity << endl;
+            while(printPtr != nullptr){
+                cout << "Nodo: "<< printPtr << endl;
+                cout << "Número: " << printPtr->getData()->getFlightNum() << endl;
+                cout << "Time: " <<  printPtr->getData()->getIntTimeValue() << endl << endl;
+                printPtr = printPtr->getNext();
+            }
+        }
 };
 
 #endif

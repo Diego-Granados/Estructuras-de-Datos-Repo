@@ -41,7 +41,13 @@ int main() {
     cout << "Cantidad de vuelos: " << cantVuels << endl; 
     cout << "Start Hour: " << StartHour << " End Hour: " << EndHour << endl;
 
+    for (int j = 0; j < 5; j++){
+        char* currentTimeString = ctime(&currentTime);
+        cout << currentTimeString << endl;
+        currentTime += 60;
+    }
     
+
     
-    fillFlights(&vuelos, cantVuels, StartHour, EndHour,airlines); // Llama a la función
+   // fillFlights(&vuelos, cantVuels, StartHour, EndHour,airlines); // Llama a la función
 }

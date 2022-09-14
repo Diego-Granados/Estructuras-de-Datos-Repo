@@ -4,7 +4,6 @@
 
 #define LIST 1
 
-// 2. ajustar a que esta lista sea doblemente enlazada, cambia el add, find, insert y el remove
 template <class T>
 class List {
     private:
@@ -13,6 +12,7 @@ class List {
         int quantity;
         bool empty;
         Node<T> *searchPosition = NULL;
+        Node<T> *searchBehind = NULL;
 
     public:
         List() {
@@ -27,13 +27,25 @@ class List {
 
             if (quantity>0) {
                 this->last->setNext(newNode);
-                newNode->setPrev(this->last);
             } else {
                 this->first = newNode;
             }
             this->last = newNode;
 
             empty = false;
+            quantity++;
+        };
+
+        void addAtBegining(T *pData) {
+            Node<T> *newNode = new Node<T>(pData);
+
+            if (this->first!=NULL) {
+                newNode->setNext(this->first);
+            } else {
+                this->last = newNode;
+            }
+            this->first = newNode;
+
             quantity++;
         }
 
@@ -52,9 +64,11 @@ class List {
         T* find(int pPosition) {
             T* result = NULL;
             searchPosition = this->first;
+            searchBehind = NULL;
 
             if (pPosition<getSize()) {
                 while(pPosition>0) {
+                    searchBehind = searchPosition;
                     searchPosition = searchPosition->getNext();
                     pPosition--;
                 }
@@ -73,11 +87,8 @@ class List {
                 T* result = find(pPosition);
                 
                 newNodo->setNext(searchPosition);
-                if (searchPosition->getPrev()!=NULL) {
-                    searchPosition->getPrev()->setNext(newNodo);
-                    newNodo->setPrev(searchPosition->getPrev()); 
-                    searchPosition->setPrev(newNodo);
-                    
+                if (searchBehind!=NULL) {
+                    searchBehind->setNext(newNodo);
                 } else {
                     this->first = newNodo;
                 }
@@ -88,35 +99,28 @@ class List {
             }
         }
 
-        bool remove(int pPosition) {
-            bool result = false;
+        T* remove(int pPosition) {
+            T* result = NULL;
             if (first!=NULL && pPosition<getSize()) {
                 Node<T> *search = first;
                 if (pPosition!=0) {
-                    T* data = find(pPosition);
+                    result = find(pPosition);
 
-                    if (searchPosition!=last) {
-                        searchPosition->getPrev()->setNext(searchPosition->getNext());
-                        searchPosition->getNext()->setPrev(searchPosition->getPrev());
-                        searchPosition->setNext(NULL);
+                    searchBehind->setNext(searchPosition->getNext());
+
+                    if (searchPosition==last) {
+                        last = searchBehind;
                     }
-                    else {
-                        last = searchPosition->getPrev();
-                        last->setNext(NULL);
-                    }              
-                    
-                    searchPosition->setPrev(NULL);
-                    delete searchPosition;
+                    searchPosition->setNext(NULL);
                 } else {
                     first = first->getNext();
-                    first->setPrev(NULL);
-                  //  search->setNext(NULL);
-                    delete search;
+                    search->setNext(NULL);
+                    result = search->getData();
                 }
                 quantity--;
             }
             return result;
-        } 
+        };
 };
 
 #endif

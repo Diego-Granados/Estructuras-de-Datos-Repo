@@ -41,7 +41,7 @@ class Stack {
             return (this->first->getData());
         }
 
-        T* topNode() {
+        T* topNode() { // para las pilas que tienen nodos como datos, se retorna un puntero al nodo en sí 
             return (this->first->getDataPtr());
         }
 
@@ -71,7 +71,7 @@ class Stack {
             return *(searchPtr->data);
         }
 
-        void PrintStack(){
+        void PrintStack(){ // esta función imprime todos los contenidos de la pila.
             Node<T> * printPtr = this->first;
             while(printPtr != nullptr){
                 cout << printPtr << endl;

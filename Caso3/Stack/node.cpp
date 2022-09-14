@@ -28,7 +28,7 @@ class Node {
              return data;
         }
 
-        T* getDataPtr() {
+        T* getDataPtr() { // usa función que retorna un puntero a los datos en sí y no una copia.
              return &data;
         }
 
